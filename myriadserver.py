@@ -10,11 +10,6 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from sklearn.metrics.pairwise import cosine_similarity
 
-df = pd.read_json("./text_and_entities.json")
-with open("./models/tdidf_wm.pkl", "rb") as f:
-    tfidf_wm = pickle.load(f)
-with open("./models/tfidf_vectorizer.pkl", "rb") as f:
-    vectorizer = pickle.load(f)
 load_dotenv()
 GCUBE_TOKEN = getenv("GCUBE_TOKEN")
 
@@ -179,3 +174,27 @@ def handle_ir_retrieve():
 def handle_vectorize():
     query = request.get_json()["query"]
     return jsonify(str(query_vectorize(query)))
+
+
+@app.before_request
+def init_pkl_files():
+    global df
+    global vectorizer
+    global tfidf_wm
+    df = pd.read_json("./text_and_entities.json")
+    with open("./models/tdidf_wm.pkl", "rb") as f:
+        tfidf_wm = pickle.load(f)
+    with open("./models/tfidf_vectorizer.pkl", "rb") as f:
+        vectorizer = pickle.load(f)
+    return
+
+
+@app.after_request
+def gc(response):
+    global df
+    global vectorizer
+    global tfidf_wm
+    del df
+    del vectorizer
+    del tfidf_wm
+    return response
