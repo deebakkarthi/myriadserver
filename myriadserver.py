@@ -10,20 +10,20 @@ from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from sklearn.metrics.pairwise import cosine_similarity
 
-app = Flask(__name__)
-logging.basicConfig(
-    format="%(asctime)s [%(funcName)s]:\t%(message)s",
-    datefmt="%m/%d/%Y %I:%M:%S %p",
-    level=logging.INFO,
-)
-load_dotenv()
-GCUBE_TOKEN = getenv("GCUBE_TOKEN")
-
 df = pd.read_json("./text_and_entities.json")
 with open("./models/tdidf_wm.pkl", "rb") as f:
     tfidf_wm = pickle.load(f)
 with open("./models/tfidf_vectorizer.pkl", "rb") as f:
     vectorizer = pickle.load(f)
+load_dotenv()
+GCUBE_TOKEN = getenv("GCUBE_TOKEN")
+
+app = Flask(__name__, static_folder=None)
+logging.basicConfig(
+    format="%(asctime)s [%(funcName)s]:\t%(message)s",
+    datefmt="%m/%d/%Y %I:%M:%S %p",
+    level=logging.INFO,
+)
 
 
 def query_vectorize(query):
