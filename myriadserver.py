@@ -9,11 +9,14 @@ import requests
 from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from sklearn.metrics.pairwise import cosine_similarity
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()
 GCUBE_TOKEN = getenv("GCUBE_TOKEN")
 
 app = Flask(__name__, static_folder=None)
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 logging.basicConfig(
     format="%(asctime)s [%(funcName)s]:\t%(message)s",
     datefmt="%m/%d/%Y %I:%M:%S %p",
