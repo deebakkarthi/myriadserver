@@ -1,0 +1,17 @@
+meta {
+  name: Vectorize
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://127.0.0.1:5000/vectorize/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "query": "largest city in the world"
+  }
+}
