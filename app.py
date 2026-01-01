@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 import logging
 import pickle
+from os import getenv
 
 import numpy as np
 import pandas as pd
 import requests
+from dotenv import load_dotenv
 from flask import Flask, jsonify, request
 from sklearn.metrics.pairwise import cosine_similarity
-from dotenv import load_dotenv
-from os import getenv
 
 app = Flask(__name__)
 logging.basicConfig(
